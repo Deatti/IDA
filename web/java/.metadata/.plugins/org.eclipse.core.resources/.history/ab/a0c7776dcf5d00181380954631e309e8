@@ -1,0 +1,68 @@
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPubSub;
+
+public class WebCapture {
+	public static void main(String args[]) throws Exception{
+		
+		
+		Thread1 t1= new Thread1();
+		t1.start();
+		
+	}
+}
+	class Thread1 extends Thread{
+		public void run() {
+			Jedis watch = new Jedis("210.114.89.51",6379);
+			final Jedis output = new Jedis("210.114.89.51",6379);
+			
+			final JedisPubSub jedisPubSub = new JedisPubSub() {
+				
+				public void onMessage(String channal, String message) {
+					System.out.println("C");
+					System.out.println(output.rpop("CaptureList"));
+				}
+			};
+			//JedisPubSub jedisPubSub = setupSubscriber();
+			//JedisListManage jedisPubSub = new JedisListManage();
+			String channal[] = {"CaptureList"};
+			watch.subscribe(jedisPubSub, channal);
+			/*System.setProperty("webdriver.gecko.driver", "/Users/nightzen/Downloads/web/jar/geckodriver");
+			WebDriver driver = new FirefoxDriver();
+		
+			driver.get("https://sovrin.org/people/");
+			Screenshot fpScreenshot = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000)).takeScreenshot(driver);
+			try{
+				ImageIO.write(fpScreenshot.getImage(),"JPG", new File("/Volumes/lake/capture/img/"+System.currentTimeMillis()+"FullPageScreenshot.jpg"));
+			}catch(IOException e) {
+				e.printStackTrace();
+			}*/
+		}
+	}
+	
+	/*class JedisListManage {	
+		private void setupSubscriber() {
+			final Jedis output = new Jedis("210.114.89.51",6379);
+			
+			final JedisPubSub jedisPubSub = new JedisPubSub() {
+				public void onMessage(String channal, String message) {
+					System.out.println("C");
+					output.rpop("CaptureList");
+				}
+			};
+			//return jedisPubSub;
+		}
+	}*/
+
+

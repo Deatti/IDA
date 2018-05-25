@@ -1,0 +1,35 @@
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;;
+public class WebCapture {
+	public static void main(String args[]) throws Exception{
+		Thread1 t1= new Thread1();
+		t1.start();
+		
+	}
+}
+	class Thread1 extends Thread{
+		public void run() {
+
+			System.setProperty("webdriver.gecko.driver", "/Users/nightzen/Downloads/web/jar/geckodriver");
+			WebDriver driver = new FirefoxDriver();
+		
+			driver.get("https://sovrin.org/people/");
+			Screenshot fpScreenshot = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000)).takeScreenshot(driver);
+			try{
+				ImageIO.write(fpScreenshot.getImage(),"JPG", new File("/Volumes/lake/capture/img/"+System.currentTimeMillis()+"FullPageScreenshot.jpg"));
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+}
